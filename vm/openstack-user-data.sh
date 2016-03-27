@@ -2,13 +2,17 @@
 set -u
 
 fail() { echo "ERR@$@"; exit 1; }
-log() { echo "cloudinit/bootstrap: $@"; }
+log() { echo "cloudconfig: $@"; }
 silent() { "$@" >/dev/null 2>&1; }
 
 URL="http://cloudinit/"
 basedir="/etc/cloudconfig"
 
 main() {
+	echo "#### $(dirname $0)"
+	fail $LINENO "STOP"
+
+
 	if is_online; then
    	[ -d $basedir/.git ] && (cd $basedir && git pull) || git clone $URL $basedir
 	else

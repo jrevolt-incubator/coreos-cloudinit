@@ -2,7 +2,7 @@
 set -u
 
 basedir="$(realpath $(dirname $0)/..)"
-ovfdir="$basedir/cloud-template"
+ovfdir="$basedir/vm"
 
 log() { echo "$@" >&2; }
 fail() { echo "${@:-FAIL}"; exit 1; }
@@ -10,12 +10,12 @@ fail() { echo "${@:-FAIL}"; exit 1; }
 
 build_archive() {
 	log "Building and encoding archive..."
-	tar cz -C $basedir bin cloud-config manifests pki router | base64 -w0
+	tar cz -C $basedir bin cloud-config pki router | base64 -w0
 }
 
 build_user_data() {
 cat << EOF
-$(cat $basedir/bin/cloud-template-openstack-user-data.sh | sed 's/##ARCHIVE.TGZ.BASE64##/'$(build_archive | sed 's/\//\\\//g')'/' )
+$(cat $basedir/vm/openstack-user-data.sh | sed 's/##ARCHIVE.TGZ.BASE64##/'$(build_archive | sed 's/\//\\\//g')'/' )
 EOF
 }
 
@@ -29,7 +29,7 @@ build_iso() {
 	bash $workdir/openstack/latest/user_data validate || fail "$LINENO Invalid archive"
 
    mkisofs -R -V config-2 --input-charset=utf-8 -joliet \
-   	-o $basedir/cloud-template/cloud-template.iso $workdir \
+   	-o $ovfdir/cloud-template.iso $workdir \
    	>/dev/null 2>&1 || fail $LINENO
 }
 
@@ -52,7 +52,7 @@ update_ovf() {
 	cd $ovfdir
 	for fname in *.ovf; do
 		log "$fname: updating file sizes in OVF"
-     	sed -i -r 's#<File ovf:href="([^"]*)".*#'$basedir/bin/cloud-template.sh' get_ovf_fileref \1#ge' $fname
+     	sed -i -r 's#<File ovf:href="([^"]*)".*#'$ovfdir/cloud-template.sh' get_ovf_fileref \1#ge' $fname
      	build_manifest $fname
 	done
 	)

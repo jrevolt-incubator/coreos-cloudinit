@@ -11,15 +11,12 @@
   <NetworkSection>
     <Info>The list of logical networks</Info>
     <Network ovf:name="Internal">
-      <Description>Internal Subnet</Description>
-    </Network>
-    <Network ovf:name="External">
-      <Description>External Network</Description>
+      <Description>Internal</Description>
     </Network>
   </NetworkSection>
   <VirtualSystem ovf:id="cloud-template">
     <Info>A virtual machine</Info>
-    <Name>cloud-router</Name>
+    <Name>cloud-admin</Name>
     <OperatingSystemSection ovf:id="100" vmw:osType="other26xLinux64Guest">
       <Info>The kind of installed guest operating system</Info>
       <Description>Other 2.6.x Linux (64-bit)</Description>
@@ -112,19 +109,8 @@
         <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
         <rasd:Connection>Internal</rasd:Connection>
         <rasd:Description>VmxNet3 ethernet adapter on "Internal"</rasd:Description>
-        <rasd:ElementName>eth0-internal</rasd:ElementName>
+        <rasd:ElementName>Network adapter 1</rasd:ElementName>
         <rasd:InstanceID>10</rasd:InstanceID>
-        <rasd:ResourceSubType>VmxNet3</rasd:ResourceSubType>
-        <rasd:ResourceType>10</rasd:ResourceType>
-        <vmw:Config ovf:required="false" vmw:key="wakeOnLanEnabled" vmw:value="true" />
-      </Item>
-      <Item>
-        <rasd:AddressOnParent>8</rasd:AddressOnParent>
-        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
-        <rasd:Connection>External</rasd:Connection>
-        <rasd:Description>VmxNet3 ethernet adapter on "External"</rasd:Description>
-        <rasd:ElementName>eth1-external</rasd:ElementName>
-        <rasd:InstanceID>11</rasd:InstanceID>
         <rasd:ResourceSubType>VmxNet3</rasd:ResourceSubType>
         <rasd:ResourceType>10</rasd:ResourceType>
         <vmw:Config ovf:required="false" vmw:key="wakeOnLanEnabled" vmw:value="true" />
