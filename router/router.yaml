@@ -1,0 +1,52 @@
+#cloud-config
+coreos:
+  units:
+    - name: systemd-networkd.service
+      command: stop
+    - name: 00-eth0.network
+      runtime: true
+      content: |
+        [Match]
+        Name=eth0
+        [Network]
+        Address=192.168.7.1/24
+        DNS=192.168.7.1
+        Domains=cloud.local
+        IPForward=ipv4
+    - name: 00-eth1.network
+      runtime: true
+      content: |
+        [Match]
+        Name=eth1
+        [Network]
+        DHCP=yes
+        IPMasquerade=ipv4
+        [DHCP]
+        #UseDNS=false
+    - name: down-interfaces.service
+      command: start
+      content: |
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/bin/ip link set eth0 down
+        ExecStart=/usr/bin/ip addr flush dev eth0
+    - name: systemd-networkd.service
+      command: restart
+    - name: iptables-restore.service
+      command: start
+    - name: dnsmasq.service
+      command: start
+      content: |
+        [Unit]
+        Requires=docker.service
+        After=docker.service
+        [Service]
+        ExecStartPre=-/usr/bin/docker rm -f dnsmasq
+        ExecStart=/usr/bin/docker run --name dnsmasq \
+          -p 53:53/tcp -p 53:53/udp -p 67:67/udp \
+          -v /etc/dnsmasq.conf:/etc/dnsmasq.conf \
+          -v /var/lib/misc/dnsmasq.leases:/var/lib/misc/dnsmasq.leases \
+          --net=host --cap-add=NET_ADMIN \
+          dnsmasq \
+          dnsmasq -d
+        ExecStop=-/usr/bin/docker rm -f dnsmasq
