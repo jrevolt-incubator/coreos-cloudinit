@@ -10,6 +10,7 @@ basedir="/etc/cloudconfig"
 
 main() {
 	echo "#### $(dirname $0)"
+	passwd -d root
 	fail $LINENO "STOP"
 
 

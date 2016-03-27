@@ -6,7 +6,7 @@ ovfdir="$basedir/vm"
 
 log() { echo "$@" >&2; }
 fail() { echo "${@:-FAIL}"; exit 1; }
-
+silent() { "$@" >/dev/null 2>&1; }
 
 build_archive() {
 	log "Building and encoding archive..."
@@ -21,6 +21,9 @@ EOF
 
 build_iso() {
 	echo "Building ISO..."
+
+	silent which mkisofs || fail "Missing mkisofs"
+
 	local workdir=$(mktemp -d); trap "rm -rf $workdir" EXIT
 	mkdir -p $workdir/openstack/latest
 	build_user_data > $workdir/openstack/latest/user_data
