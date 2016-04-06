@@ -1,0 +1,6 @@
+cloud-template/cloud-template.vmdk filter=lfs diff=lfs merge=lfs -text
+vm/cloud-template.vmdk filter=lfs diff=lfs merge=lfs -text
+vm/cloud-template.vmdk filter=lfs diff=lfs merge=lfs -text
+vm/cloud-template.vmdk filter=lfs diff=lfs merge=lfs -text
+vm/cloud-template.vmdk filter=lfs diff=lfs merge=lfs -text
+vm/cloud-template.vmdk filter=lfs diff=lfs merge=lfs -text
