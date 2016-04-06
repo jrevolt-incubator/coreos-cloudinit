@@ -69,7 +69,7 @@ basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 subjectAltName = @alt_names
 [alt_names]
-DNS.1 = ${name}.${domain}
+DNS.1 = *.${domain}
 EOF
 
 	[ -f ${name}.key ] || openssl genrsa -out ${name}.key 2048
